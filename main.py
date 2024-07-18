@@ -1,6 +1,7 @@
 import logging
 import os
 
+import models
 from db import Base, engine
 from handlers import start
 
