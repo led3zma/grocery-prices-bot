@@ -3,7 +3,7 @@ import os
 
 import models
 from db import Base, engine
-from handlers import start
+from handlers import menu, start, help
 
 from dotenv import load_dotenv
 from telegram.ext import ApplicationBuilder, CommandHandler
@@ -22,5 +22,7 @@ if __name__ == '__main__':
 
     start_handler = CommandHandler('start', start)
     application.add_handler(start_handler)
+    application.add_handler(CommandHandler('menu', menu))
+    application.add_handler(CommandHandler('help', help))
 
     application.run_polling()
