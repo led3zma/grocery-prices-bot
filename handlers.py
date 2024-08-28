@@ -16,3 +16,15 @@ async def menu(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
 async def help(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await menu(update, context)
+
+
+async def list_products(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    await context.bot.send_message(update.effective_chat.id, '*Listing...(WIP)*', parse_mode=ParseMode.MARKDOWN)
+
+
+async def register_products(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    await context.bot.send_message(update.effective_chat.id, '*Introduce la descripción del producto...(WIP)*', parse_mode=ParseMode.MARKDOWN)
+
+
+async def search_products(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    await context.bot.send_message(update.effective_chat.id, '*Introduce el producto a buscar...(WIP)*', parse_mode=ParseMode.MARKDOWN)
