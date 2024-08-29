@@ -2,11 +2,22 @@ from enum import Enum
 
 import conversation_states
 
-from telegram import Update
+from telegram import InlineKeyboardButton, InlineKeyboardMarkup, ReplyKeyboardMarkup, ReplyKeyboardRemove, Update
 from telegram.constants import ParseMode
 from telegram.ext import ContextTypes, ConversationHandler
 
 MENU = '*Opciones*\n/listar\n/registrar\n/buscar'
+NAVIGATION_MENU = InlineKeyboardMarkup([
+    [
+        InlineKeyboardButton('Prev', callback_data='1'),
+        InlineKeyboardButton('Next', callback_data='2')
+    ]
+])
+RESPONSE_MENU = ReplyKeyboardMarkup(
+    [['1', '2', '3']],
+    one_time_keyboard=True,
+    input_field_placeholder='Select one'
+)
 
 
 async def start(update: Update, context: ContextTypes.DEFAULT_TYPE):
@@ -58,6 +69,18 @@ async def register_product_store(update: Update, context: ContextTypes.DEFAULT_T
 
 async def search_products(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await context.bot.send_message(update.effective_chat.id, '*Introduce el producto a buscar...(WIP)*', parse_mode=ParseMode.MARKDOWN)
+    return conversation_states.SEARCH_NAME
+
+
+async def search_product_name(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    await update.message.reply_text('*Listando...*', parse_mode=ParseMode.MARKDOWN, reply_markup=NAVIGATION_MENU)
+    await update.message.reply_text('*Selecciona uno...*', parse_mode=ParseMode.MARKDOWN, reply_markup=RESPONSE_MENU)
+    return conversation_states.SEARCH_DETAILS
+
+
+async def get_product_details(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    await update.message.reply_text('*Detalles (WIP)...*', parse_mode=ParseMode.MARKDOWN, reply_markup=ReplyKeyboardRemove())
+    return ConversationHandler.END
 
 
 async def end_conversation_to_menu(update: Update, context: ContextTypes.DEFAULT_TYPE):

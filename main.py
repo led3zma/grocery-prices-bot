@@ -4,7 +4,7 @@ import os
 import models
 import conversation_states
 from db import Base, engine
-from handlers import end_conversation_to_menu, list_products, menu, register_product_name, register_product_price, register_product_store, register_products, search_products, start, help
+from handlers import end_conversation_to_menu, get_product_details, list_products, menu, register_product_name, register_product_price, register_product_store, register_products, search_product_name, search_products, start, help
 
 from dotenv import load_dotenv
 from telegram.ext import ApplicationBuilder, CommandHandler, ConversationHandler, MessageHandler, filters
@@ -45,6 +45,19 @@ if __name__ == '__main__':
         fallbacks=[CommandHandler("cancel", end_conversation_to_menu)]
     ))
     application.add_handler(CommandHandler('listar', list_products))
-    application.add_handler(CommandHandler('buscar', search_products))
+    application.add_handler(ConversationHandler(
+        entry_points=[CommandHandler('buscar', search_products)],
+        states={
+            conversation_states.SEARCH_NAME: [
+                MessageHandler(filters.TEXT & ~filters.COMMAND,
+                               search_product_name)
+            ],
+            conversation_states.SEARCH_DETAILS: [
+                MessageHandler(filters.TEXT & ~filters.COMMAND,
+                               get_product_details)
+            ]
+        },
+        fallbacks=[CommandHandler("cancel", end_conversation_to_menu)]
+    ))
 
     application.run_polling()
